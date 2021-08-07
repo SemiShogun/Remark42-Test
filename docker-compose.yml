@@ -1,0 +1,25 @@
+services:
+  remark42:
+    image: umputun/remark42:latest
+    restart: always
+    container_name: "remark42"
+    ports:
+      - "8080:8080"
+    environment:
+      - APP_UID=2000 # runs Remark42 app with non-default UID
+      - TIME_ZONE=GTC # sets container time to UTC
+      - REMARK_URL=http://remark42.localhost:8080 # website url
+      - SITE=asdf # site ID, same as used for `site_id`, see "Setup on your website"
+      - SECRET=abcd-1234 # secret key
+      - AUTH_GITHUB_CID=15cf074f41580c860944 # OAuth2 client ID
+      - AUTH_GITHUB_CSEC=a7ba7a10dedda8dc3d6ae291c83a3b3b301b7ca6 # OAuth2 client secret
+    volumes:
+      - ./var:/srv/var # persistent volume to store all Remark42 data
+  web:
+    build: ./website
+    restart: always
+    container_name: web
+    ports:
+      - "8000:80"
+    volumes:
+      - ./var:/srv/var # persistent volume to store all Remark42 data
